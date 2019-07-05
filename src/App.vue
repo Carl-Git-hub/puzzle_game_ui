@@ -1,17 +1,33 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <v-app>
+      <v-content>
+        <v-container fluid>
+          <router-view></router-view>
+        </v-container>
+      </v-content>
+    </v-app>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { debounce } from 'lodash'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'app',
-  components: {
-    HelloWorld
+  methods: {
+    ...mapActions(['setWidth']),
+    setWindowWidth: debounce(function () {
+      this.setWidth(window.innerWidth)
+    }, 0.01)
+  },
+  created () {
+    this.setWidth(window.innerWidth)
+    window.addEventListener('resize', this.setWindowWidth, false)
+  },
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this.setWindowWidth, false)
   }
 }
 </script>
