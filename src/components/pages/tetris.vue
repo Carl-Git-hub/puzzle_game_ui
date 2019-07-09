@@ -1,12 +1,20 @@
 <template>
   <div>
-    <h1>Hi</h1>
+    <panel class="panel"></panel>
   </div>
 </template>
 
 <script>
+import panel from '../organisms/panel.vue'
+
 export default {
-  name: 'Tetris',
+  name: 'tetris',
+  components: {
+    panel
+  },
+  created () {
+
+  }
 }
 </script>
 
@@ -23,7 +31,9 @@ li {
   display: inline-block;
   margin: 0 10px;
 }
-a {
-  color: #42b983;
+
+.panel {
+  width: 400px;
+  height: 600px;
 }
 </style>

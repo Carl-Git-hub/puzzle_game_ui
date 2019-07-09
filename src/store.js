@@ -7,11 +7,15 @@ Vue.use(Vuex)
 const modules = {}
 
 // Dynamically import and namespace Vuex modules
-const moduleNames = []
+const moduleNames = [
+  'window',
+  'cellConfig',
+  'panelConfig',
+  'player'
+]
 
 moduleNames.forEach(name => {
   let module = require(`./storeModules/${name}`)
-
   modules[name] = {
     namespaced: true,
     ...module.default

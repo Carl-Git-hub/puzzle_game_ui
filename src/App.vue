@@ -17,7 +17,8 @@ import { mapActions } from 'vuex'
 export default {
   name: 'app',
   methods: {
-    ...mapActions(['setWidth']),
+    ...mapActions({setWidth : 'window/setWidth'
+    }),
     setWindowWidth: debounce(function () {
       this.setWidth(window.innerWidth)
     }, 0.01)
