@@ -1,7 +1,7 @@
 const state = {
     curBlockShape: 'O',
     curBlockRot: 0,
-    curBlockPos: {x: 2, y: 2}
+    curBlockPos: {x: 4, y: 1}
   }
   
   const mutations = {

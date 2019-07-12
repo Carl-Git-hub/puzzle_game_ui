@@ -55,7 +55,12 @@ export default {
         xBlockPositions.push(blockPosValues[1] + this.getBlockPos.x)
       }
       const isPartOfPlayerBlock = (x, y) => {
-        return yBlockPositions.includes(y) && xBlockPositions.includes(x)
+        for (blockPosValues of constants.blockType[this.getBlockShape][this.getCurBlockRot]) {
+          if ((blockPosValues[0] + this.getBlockPos.y) === y && (blockPosValues[1] + this.getBlockPos.x) === x) {
+            return true
+          }
+        }
+        return false
       }
       for (let y = 0; y < this.rowSize; y++) {
         for (let x = 0; x < this.colSize; x++) {
