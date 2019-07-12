@@ -25,7 +25,10 @@ export default {
   computed: {
     ...mapGetters({
       getNumRows: "panelConfig/getNumRows",
-      getNumCols: "panelConfig/getNumCols"
+      getNumCols: "panelConfig/getNumCols",
+      getBlockPos: "player/getBlockPos",
+      getBlockShape: "player/getBlockShape",
+      getCurBlockRot: "player/getCurBlockRot"
     })
   },
   methods: {
@@ -38,7 +41,17 @@ export default {
     this.setBlockShape(_.sample(Object.keys(constants.blockType)))
   },
   mounted() {
-    this.busPanel.$emit('render')
+    const dropBlock = () => {
+      return {
+        x: this.getBlockPos.x,
+        y: this.getBlockPos.y + 1
+      }
+    }
+    var self = this
+    self.set = setInterval(function() {
+      self.setBlockPos(dropBlock())
+      self.busPanel.$emit('render') 
+    }, 500);
   }
 }
 </script>
