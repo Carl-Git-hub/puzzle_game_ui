@@ -45,26 +45,18 @@ export default {
     }
   },
   methods: {
-    render() {
-      var xBlockPositions = []
-      var yBlockPositions = []
-      let blockPosValues = []
-      console.log(this.getBlockShape)
-      for (blockPosValues of constants.blockType[this.getBlockShape][this.getCurBlockRot]) {
-        yBlockPositions.push(blockPosValues[0] + this.getBlockPos.y)
-        xBlockPositions.push(blockPosValues[1] + this.getBlockPos.x)
-      }
-      const isPartOfPlayerBlock = (x, y) => {
-        for (blockPosValues of constants.blockType[this.getBlockShape][this.getCurBlockRot]) {
-          if ((blockPosValues[0] + this.getBlockPos.y) === y && (blockPosValues[1] + this.getBlockPos.x) === x) {
-            return true
-          }
+    isPartOfPlayerBlock (x, y) {
+      for (let blockPosValues of constants.blockType[this.getBlockShape][this.getCurBlockRot]) {
+        if ((blockPosValues[0] + this.getBlockPos.y) === y && (blockPosValues[1] + this.getBlockPos.x) === x) {
+          return true
         }
-        return false
       }
+      return false
+    },
+    render() {
       for (let y = 0; y < this.rowSize; y++) {
         for (let x = 0; x < this.colSize; x++) {
-          if (isPartOfPlayerBlock(x, y)) {
+          if (this.isPartOfPlayerBlock(x, y)) {
             this.cellPanelsBus[y][x].$emit("setShape", this.getBlockShape);
           } else {
             this.cellPanelsBus[y][x].$emit("setShape", "EMPTY");

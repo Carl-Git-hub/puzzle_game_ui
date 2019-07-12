@@ -11,7 +11,8 @@ const moduleNames = [
   'window',
   'cellConfig',
   'panelConfig',
-  'player'
+  'player',
+  'ground'
 ]
 
 moduleNames.forEach(name => {
