@@ -1,5 +1,5 @@
 <template>
-  <div :style="style" :class="shape" class="cell"></div>
+  <div :style="style" :class="colour" class="cell"></div>
 </template>
 
 <script>
@@ -7,15 +7,23 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'cell',
+  data() {
+    return {
+      shape: "EMPTY"
+    }
+  },
   props: {
-    shape : String,
     posY: Number,
-    posX: Number
+    posX: Number,
+    bus: Object
   },
   computed: {
       ...mapGetters({
         getCellSize: 'cellConfig/getCellSize'
       }),
+      colour () {
+        return this.shape
+      },
       style () {
         return {
           width: this.getCellSize + 'px',
@@ -24,7 +32,15 @@ export default {
           top: this.posY * this.getCellSize + 'px'
         }
       }
+    },
+  methods: {
+    setShape (shape) {
+      this.shape = shape
     }
+  },
+  created() {
+    this.bus.$on("setShape", (shape) => this.setShape(shape));
+  }
 }
 </script>
 
@@ -38,6 +54,11 @@ export default {
     border-width: 1px;
     border-color: rgba(100, 100, 100, 0.3);
     /* border-left-color: rgba(255, 255, 255, 0.3); */
+  }
+  .cell.EMPTY {
+    background-color: rgba(200, 200, 200, 0.3);
+    border-right-color: rgba(200, 200, 200, 0.3);
+    border-bottom-color: rgba(200, 200, 200, 0.3);
   }
   .cell.I {
     background-color: cyan;

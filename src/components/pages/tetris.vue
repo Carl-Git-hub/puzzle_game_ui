@@ -1,19 +1,44 @@
 <template>
   <div>
-    <panel class="panel"></panel>
+    <panel :bus="busPanel" :rowSize="getNumRows" :colSize="getNumCols" class="panel"></panel>
   </div>
 </template>
 
 <script>
+import _ from 'lodash'
+import { mapActions, mapGetters } from 'vuex'
+import Vue from 'vue'
+
+import constants from '../../const'
 import panel from '../organisms/panel.vue'
 
 export default {
   name: 'tetris',
+  data: () => {
+    return {
+      busPanel: new Vue()
+    }
+  },
   components: {
     panel
   },
+  computed: {
+    ...mapGetters({
+      getNumRows: "panelConfig/getNumRows",
+      getNumCols: "panelConfig/getNumCols"
+    })
+  },
+  methods: {
+    ...mapActions({
+      setBlockShape: 'player/setBlockShape',
+      setBlockPos: 'player/setBlockPos'
+    })
+  },
   created () {
-
+    this.setBlockShape(_.sample(Object.keys(constants.blockType)))
+  },
+  mounted() {
+    this.busPanel.$emit('render')
   }
 }
 </script>

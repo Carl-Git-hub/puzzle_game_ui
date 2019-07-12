@@ -6,5 +6,8 @@ module.exports = {
             .post()
             .use('storysource')
             .loader(require.resolve('@storybook/addon-storysource/loader'))
-        }
+        },
+  configureWebpack: {
+    devtool: 'source-map'
+  }
 }

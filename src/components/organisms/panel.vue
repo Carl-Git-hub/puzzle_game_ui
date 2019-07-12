@@ -1,33 +1,81 @@
 <template>
-  <div class='panel'>
-    <div v-for="row in getNumRows" :key="'cell-row-' + row">
-      <div v-for="col in getNumCols" :key="'cell-'+ row + '-' + col">
-        <cell class="cell" :posX="col" :posY="row"></cell>
+  <div class="panel">
+    <div v-for="row in rowSize" :key="'cell-row-' + row">
+      <div v-for="col in colSize" :key="'cell-'+ row + '-' + col">
+        <cell :bus="cellPanelsBus[row - 1][col - 1]" class="cell" :posX="col" :posY="row"></cell>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
 import { mapGetters } from 'vuex'
-import cell from '../atoms/cell.vue'
+
+import cell from "../atoms/cell.vue"
+import constants from '../../const'
 
 export default {
-  name: 'panel',
+  name: "panel",
+  props: {
+    bus: Object,
+    rowSize: Number,
+    colSize: Number
+  },
+  computed: {
+    ...mapGetters({
+      getBlockPos: "player/getBlockPos",
+      getBlockShape: "player/getBlockShape",
+      getCurBlockRot: "player/getCurBlockRot"
+    })
+  },
   components: {
     cell
   },
-  computed: {
-      ...mapGetters({
-        getNumRows: 'panelConfig/getNumRows',
-        getNumCols: 'panelConfig/getNumCols'
-      })
+  data() {
+    var cellPanels = []
+    for (let y = 0; y < 18; y++) {
+      cellPanels[y] = [];
+      for (let x = 0; x < 10; x++) {
+        cellPanels[y][x] = new Vue();
+      }
+    }
+    return {
+      cellPanelsBus: cellPanels
+    }
+  },
+  methods: {
+    render() {
+      var xBlockPositions = []
+      var yBlockPositions = []
+      let blockPosValues = []
+      console.log(this.getBlockShape)
+      for (blockPosValues of constants.blockType[this.getBlockShape][this.getCurBlockRot]) {
+        yBlockPositions.push(blockPosValues[0] + this.getBlockPos.y)
+        xBlockPositions.push(blockPosValues[1] + this.getBlockPos.x)
+      }
+      const isPartOfPlayerBlock = (x, y) => {
+        return yBlockPositions.includes(y) && xBlockPositions.includes(x)
+      }
+      for (let y = 0; y < this.rowSize; y++) {
+        for (let x = 0; x < this.colSize; x++) {
+          if (isPartOfPlayerBlock(x, y)) {
+            this.cellPanelsBus[y][x].$emit("setShape", this.getBlockShape);
+          } else {
+            this.cellPanelsBus[y][x].$emit("setShape", "EMPTY");
+          }
+        }
+      }
+    }
+  },
+  created() {
+    this.bus.$on("render", this.render);
   }
-}
+};
 </script>
 
 <style scoped>
-  .panel {
-    padding: 10px;
-  }
+.panel {
+  padding: 10px;
+}
 </style>

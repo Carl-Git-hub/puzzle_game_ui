@@ -1,15 +1,5 @@
-<template>
-  <div :style="style" :class="shape"></div>
-</template>
-
-<script>
-import { mapGetters } from "vuex";
-
 export default {
-  name: "block",
-  data() {
-    return {
-      blockType: {
+    blockType: {
         I: [
           [[-1, 1], [0, 1], [1, 1], [2, 1]],
           [[1, 2], [1, 1], [1, 0], [1, -1]],
@@ -53,7 +43,4 @@ export default {
           [[-1, 1], [0, 1], [0, 0], [0, -1]]
         ]
       }
-    };
-  }
-};
-</script>
+}
