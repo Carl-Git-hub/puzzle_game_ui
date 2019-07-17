@@ -1,6 +1,6 @@
 <template>
   <div @keydown.left="moveLeft" @keydown.right="moveRight" @keydown.down="moveDown" @keydown.up="rotateBlock" tabindex="0">
-    <panel :bus="busPanel" :rowSize="getNumRows" :colSize="getNumCols" class="panel"></panel>
+    <panel :bus="busPanel" :rowSize="getNumRows" :colSize="getNumCols" :player=0 class="panel"></panel>
   </div>
 </template>
 
@@ -40,60 +40,67 @@ export default {
       addShapeToGround: 'ground/addShapeToGround'
     }),
     moveLeft () {
-      if (this.getBlockPos.x - 1 < 0) {
+      if (this.checkIfTouchWallsOrGround(0, -1)) {
         return
       }
       this.setBlockPos({
-        x: this.getBlockPos.x - 1,
-        y: this.getBlockPos.y
+        x: this.getBlockPos(0).x - 1,
+        y: this.getBlockPos(0).y,
+        player: 0
       })
       this.busPanel.$emit('render') 
     },
     moveRight () {
-      if (this.getBlockPos.x + 1 > this.getNumCols) {
+      if (this.checkIfTouchWallsOrGround(0, 1)) {
         return
       }
       this.setBlockPos({
-        x: this.getBlockPos.x + 1,
-        y: this.getBlockPos.y
+        x: this.getBlockPos(0).x + 1,
+        y: this.getBlockPos(0).y,
+        player: 0
       })
       this.busPanel.$emit('render') 
     },
     moveDown () {
-      if (this.getBlockPos.y + 1 > this.getNumRows) {
+      if (this.checkIfTouchWallsOrGround(1, 0)) {
         return
       }
       this.setBlockPos({
-        x: this.getBlockPos.x,
-        y: this.getBlockPos.y + 1
+        x: this.getBlockPos(0).x,
+        y: this.getBlockPos(0).y + 1,
+        player: 0
       })
       this.busPanel.$emit('render') 
     },
     rotateBlock () {
-      this.setCurBlockRot((this.getCurBlockRot+1) % constants.blockType[this.getBlockShape].length)
+      this.setCurBlockRot({
+        rotIndex: (this.getCurBlockRot(0)+1) % constants.blockType[this.getBlockShape(0)].length,
+        player: 0
+      })
       this.busPanel.$emit('render') 
     },
     getCurrentBlockPosition() {
       var currentBlockPositions = []
-      for (let blockPosValues of constants.blockType[this.getBlockShape][this.getCurBlockRot]) {
+      for (let blockPosValues of constants.blockType[this.getBlockShape(0)][this.getCurBlockRot(0)]) {
         currentBlockPositions.push(
-          { y: blockPosValues[0] + this.getBlockPos.y,
-            x: blockPosValues[1] + this.getBlockPos.x,
-            shape: this.getBlockShape
+          { y: blockPosValues[0] + this.getBlockPos(0).y,
+            x: blockPosValues[1] + this.getBlockPos(0).x,
+            shape: this.getBlockShape(0)
           }
         )
       }
       return currentBlockPositions
     },
-    checkIfTouchGround() {
-      const currentBlocks = this.getCurrentBlockPosition()
-      for (let block of currentBlocks) {
-        for (let groundBlock of this.getGroundState) {
-          if (groundBlock[block.y + 1] && groundBlock[block.y + 1][block.x]) {
-            return true
-          }
+    checkIfTouchWallsOrGround(yMove, xMove) {
+      var blocks = this.getCurrentBlockPosition()
+      for (let block of blocks) {
+        if (this.getGroundState[block.y + yMove] && this.getGroundState[block.y + yMove][block.x + xMove]) {
+          return true
         }
-        if (block.y >= this.getNumRows) {
+        if (block.y + yMove >= this.getNumRows) {
+          return true
+        }
+        if (block.x + xMove >= this.getNumCols || block.x + xMove < 0) {
           return true
         }
       }
@@ -101,13 +108,17 @@ export default {
     },
     dropBlock() {
       return {
-        x: this.getBlockPos.x,
-        y: this.getBlockPos.y + 1
+        x: this.getBlockPos(0).x,
+        y: this.getBlockPos(0).y + 1,
+        player: 0
       }
     }
   },
   created () {
-    this.setBlockShape(_.sample(Object.keys(constants.blockType)))
+    this.setBlockShape({
+      blockType: _.sample(Object.keys(constants.blockType)),
+      player: 0
+    })
     window.addEventListener("keydown", function(e) {
       // space and arrow keys
       if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
@@ -117,9 +128,21 @@ export default {
   mounted() {
     var self = this
     self.setBlockDrop = setInterval(function() {
-      const currentBlocks = self.getCurrentBlockPosition()
-      if (self.checkIfTouchGround(currentBlocks)) {
-        self.addShapeToGround(currentBlocks)
+      if (self.checkIfTouchWallsOrGround(1, 0)) {
+        self.addShapeToGround(self.getCurrentBlockPosition())
+        self.setBlockShape({
+          blockType: _.sample(Object.keys(constants.blockType)),
+          player: 0
+        })
+        self.setBlockPos({
+          x: 4,
+          y: 1,
+          player: 0
+        })
+        self.setCurBlockRot({
+          rotIndex: 0,
+          player: 0
+        })
       } else {
         self.setBlockPos(self.dropBlock())
       }

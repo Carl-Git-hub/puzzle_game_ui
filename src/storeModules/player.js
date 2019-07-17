@@ -1,37 +1,46 @@
 const state = {
-    curBlockShape: 'O',
-    curBlockRot: 0,
-    curBlockPos: {x: 4, y: 1}
+    players: [
+      {
+        curBlockShape: 'O',
+        curBlockRot: 0,
+        curBlockPos: {x: 4, y: 1}
+      },
+      {
+        curBlockShape: 'O',
+        curBlockRot: 0,
+        curBlockPos: {x: 4, y: 1}
+      }
+    ]
   }
   
   const mutations = {
-    setBlockPos (state, blockPos) {
-      state.curBlockPos.x = blockPos.x
-      state.curBlockPos.y = blockPos.y
+    setBlockPos (state, payload) {
+      state.players[payload.player].curBlockPos.x = payload.x
+      state.players[payload.player].curBlockPos.y = payload.y
     },
-    setBlockShape (state, blockShape) {
-      state.curBlockShape = blockShape
+    setBlockShape (state, payload) {
+      state.players[payload.player].curBlockShape = payload.blockType
     },
-    setRotIndex (state, rotIndex) {
-      state.curBlockRot = rotIndex
+    setRotIndex (state, payload) {
+      state.players[payload.player].curBlockRot = payload.rotIndex
     }
   }
   
   const actions = {
-    setBlockPos: ({ commit }, blockPos) => {
-      commit('setBlockPos', blockPos)
+    setBlockPos: ({ commit }, payload) => {
+      commit('setBlockPos', payload)
     },
-    setBlockShape: ({ commit }, blockShape) => {
-      commit('setBlockShape', blockShape)
+    setBlockShape: ({ commit }, payload) => {
+      commit('setBlockShape', payload)
     },
-    setCurBlockRot: ({ commit }, rotIndex) => {
-      commit('setRotIndex', rotIndex)
+    setCurBlockRot: ({ commit }, payload) => {
+      commit('setRotIndex', payload)
     }
   }
   const getters = {
-    getBlockPos: state => state.curBlockPos,
-    getBlockShape: state => state.curBlockShape,
-    getCurBlockRot: state => state.curBlockRot
+    getBlockPos: state => {return player => state.players[player].curBlockPos},
+    getBlockShape: state => {return player => state.players[player].curBlockShape},
+    getCurBlockRot: state => {return player => state.players[player].curBlockRot}
 }
   
   export default {

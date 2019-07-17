@@ -20,13 +20,15 @@ export default {
   props: {
     bus: Object,
     rowSize: Number,
-    colSize: Number
+    colSize: Number,
+    player: Number
   },
   computed: {
     ...mapGetters({
       getBlockPos: "player/getBlockPos",
       getBlockShape: "player/getBlockShape",
-      getCurBlockRot: "player/getCurBlockRot"
+      getCurBlockRot: "player/getCurBlockRot",
+      getGroundState: "ground/getGroundState"
     })
   },
   components: {
@@ -46,8 +48,8 @@ export default {
   },
   methods: {
     isPartOfPlayerBlock (x, y) {
-      for (let blockPosValues of constants.blockType[this.getBlockShape][this.getCurBlockRot]) {
-        if ((blockPosValues[0] + this.getBlockPos.y) === y && (blockPosValues[1] + this.getBlockPos.x) === x) {
+      for (let blockPosValues of constants.blockType[this.getBlockShape(this.player)][this.getCurBlockRot(this.player)]) {
+        if ((blockPosValues[0] + this.getBlockPos(this.player).y) === y && (blockPosValues[1] + this.getBlockPos(this.player).x) === x) {
           return true
         }
       }
@@ -57,7 +59,9 @@ export default {
       for (let y = 0; y < this.rowSize; y++) {
         for (let x = 0; x < this.colSize; x++) {
           if (this.isPartOfPlayerBlock(x, y)) {
-            this.cellPanelsBus[y][x].$emit("setShape", this.getBlockShape);
+            this.cellPanelsBus[y][x].$emit("setShape", this.getBlockShape(this.player));
+          } else if (this.getGroundState[y] && this.getGroundState[y][x]) {
+            this.cellPanelsBus[y][x].$emit("setShape", this.getGroundState[y][x]);
           } else {
             this.cellPanelsBus[y][x].$emit("setShape", "EMPTY");
           }
