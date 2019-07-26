@@ -60,8 +60,8 @@ export default {
         for (let x = 0; x < this.colSize; x++) {
           if (this.isPartOfPlayerBlock(x, y)) {
             this.cellPanelsBus[y][x].$emit("setShape", this.getBlockShape(this.player));
-          } else if (this.getGroundState[y] && this.getGroundState[y][x]) {
-            this.cellPanelsBus[y][x].$emit("setShape", this.getGroundState[y][x]);
+          } else if (this.getGroundState(this.player)[y] && this.getGroundState(this.player)[y][x]) {
+            this.cellPanelsBus[y][x].$emit("setShape", this.getGroundState(this.player)[y][x]);
           } else {
             this.cellPanelsBus[y][x].$emit("setShape", "EMPTY");
           }
@@ -77,6 +77,8 @@ export default {
 
 <style scoped>
 .panel {
+  position: relative;
   padding: 10px;
+  width: 600px;
 }
 </style>

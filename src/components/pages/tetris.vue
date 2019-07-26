@@ -1,6 +1,10 @@
 <template>
-  <div @keydown.left="moveLeft" @keydown.right="moveRight" @keydown.down="moveDown" @keydown.up="rotateBlock" tabindex="0">
-    <panel :bus="busPanel" :rowSize="getNumRows" :colSize="getNumCols" :player=0 class="panel"></panel>
+  <div>
+    <player-select v-on:startGame="startGame"></player-select>
+    <div class="tetris-box" @keydown.left="moveLeft" @keydown.right="moveRight" @keydown.down="moveDown" @keydown.up="rotateBlock" tabindex="0">
+      <panel :bus="busPanel" :rowSize="getNumRows" :colSize="getNumCols" :player=0 class="panel"></panel>
+      <panel v-if="isMultiplayer" :bus="busPanel" :rowSize="getNumRows" :colSize="getNumCols" :player=1 class="panel"></panel>
+    </div>
   </div>
 </template>
 
@@ -11,6 +15,7 @@ import Vue from 'vue'
 
 import constants from '../../const'
 import panel from '../organisms/panel.vue'
+import playerSelect from '../organisms/playerSelect.vue'
 
 export default {
   name: 'tetris',
@@ -20,7 +25,8 @@ export default {
     }
   },
   components: {
-    panel
+    panel,
+    playerSelect
   },
   computed: {
     ...mapGetters({
@@ -29,6 +35,7 @@ export default {
       getBlockPos: "player/getBlockPos",
       getBlockShape: "player/getBlockShape",
       getCurBlockRot: "player/getCurBlockRot",
+      isMultiplayer: "player/isMultiplayerMode",
       getGroundState: "ground/getGroundState"
     })
   },
@@ -37,7 +44,8 @@ export default {
       setBlockShape: 'player/setBlockShape',
       setBlockPos: 'player/setBlockPos',
       setCurBlockRot: 'player/setCurBlockRot',
-      addShapeToGround: 'ground/addShapeToGround'
+      addShapeToGround: 'ground/addShapeToGround',
+      clearRows: 'ground/clearRows'
     }),
     moveLeft () {
       if (this.checkIfTouchWallsOrGround(0, -1)) {
@@ -73,15 +81,33 @@ export default {
       this.busPanel.$emit('render') 
     },
     rotateBlock () {
+      const nextRotIdx = (this.getCurBlockRot(0)+1) % constants.blockType[this.getBlockShape(0)].length
+      if (this.checkIfTouchWallsOrGround(0, 0, nextRotIdx)) {
+        if (!this.checkIfTouchWallsOrGround(0, 1, nextRotIdx)) {
+          this.setBlockPos({
+            x: this.getBlockPos(0).x + 1,
+            y: this.getBlockPos(0).y,
+            player: 0
+          })
+        } else if (!this.checkIfTouchWallsOrGround(0, -1, nextRotIdx)) {
+          this.setBlockPos({
+            x: this.getBlockPos(0).x - 1,
+            y: this.getBlockPos(0).y,
+            player: 0
+          })
+        } else {
+          return
+        }
+      }
       this.setCurBlockRot({
-        rotIndex: (this.getCurBlockRot(0)+1) % constants.blockType[this.getBlockShape(0)].length,
+        rotIndex: nextRotIdx,
         player: 0
       })
       this.busPanel.$emit('render') 
     },
-    getCurrentBlockPosition() {
+    getCurrentBlockPosition(blockRotation = this.getCurBlockRot(0)) {
       var currentBlockPositions = []
-      for (let blockPosValues of constants.blockType[this.getBlockShape(0)][this.getCurBlockRot(0)]) {
+      for (let blockPosValues of constants.blockType[this.getBlockShape(0)][blockRotation]) {
         currentBlockPositions.push(
           { y: blockPosValues[0] + this.getBlockPos(0).y,
             x: blockPosValues[1] + this.getBlockPos(0).x,
@@ -91,10 +117,10 @@ export default {
       }
       return currentBlockPositions
     },
-    checkIfTouchWallsOrGround(yMove, xMove) {
-      var blocks = this.getCurrentBlockPosition()
+    checkIfTouchWallsOrGround(yMove, xMove, blockRotation = this.getCurBlockRot(0)) {
+      var blocks = this.getCurrentBlockPosition(blockRotation)
       for (let block of blocks) {
-        if (this.getGroundState[block.y + yMove] && this.getGroundState[block.y + yMove][block.x + xMove]) {
+        if (this.getGroundState(0)[block.y + yMove] && this.getGroundState(0)[block.y + yMove][block.x + xMove]) {
           return true
         }
         if (block.y + yMove >= this.getNumRows) {
@@ -112,6 +138,37 @@ export default {
         y: this.getBlockPos(0).y + 1,
         player: 0
       }
+    },
+    tetrisTick() {
+      if (this.checkIfTouchWallsOrGround(1, 0)) {
+        this.addShapeToGround({ 
+          blocks: this.getCurrentBlockPosition(),
+          player: 0
+        })
+        this.clearRows({ 
+          player: 0
+        })
+        this.setBlockShape({
+          blockType: _.sample(Object.keys(constants.blockType)),
+          player: 0
+        })
+        this.setBlockPos({
+          x: 4,
+          y: 1,
+          player: 0
+        })
+        this.setCurBlockRot({
+          rotIndex: 0,
+          player: 0
+        })
+      } else {
+        this.setBlockPos(this.dropBlock())
+      }
+      this.busPanel.$emit('render')
+    },
+    startGame() {
+      var self = this
+      self.setBlockDrop = setInterval(this.tetrisTick, 500);
     }
   },
   created () {
@@ -124,30 +181,6 @@ export default {
       if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
           e.preventDefault();
     }}, false);
-  },
-  mounted() {
-    var self = this
-    self.setBlockDrop = setInterval(function() {
-      if (self.checkIfTouchWallsOrGround(1, 0)) {
-        self.addShapeToGround(self.getCurrentBlockPosition())
-        self.setBlockShape({
-          blockType: _.sample(Object.keys(constants.blockType)),
-          player: 0
-        })
-        self.setBlockPos({
-          x: 4,
-          y: 1,
-          player: 0
-        })
-        self.setCurBlockRot({
-          rotIndex: 0,
-          player: 0
-        })
-      } else {
-        self.setBlockPos(self.dropBlock())
-      }
-      self.busPanel.$emit('render')
-    }, 500);
   }
 }
 </script>
@@ -168,8 +201,10 @@ li {
 div:focus {
   outline: none;
 }
-.panel {
-  width: 400px;
-  height: 600px;
+.tetris-box {
+  position: relative;
+  /* width: 200px; */
+  display: flex;
+  justify-content: flex-start;
 }
 </style>
