@@ -14,7 +14,7 @@
             <v-layout wrap>
               <v-spacer></v-spacer>
               <v-flex xs12 sm6 md4>
-                <v-text-field label="Game Name" required></v-text-field>
+                <v-text-field v-model="roomName" label="Game Name" required></v-text-field>
               </v-flex>
               <v-spacer></v-spacer>
             </v-layout>
@@ -38,29 +38,47 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: "playerSelect",
   data() {
     return {
+      roomName: 'test',
       dialog: true,
       waitForPlayersDialog: false
     };
   },
+  computed: {
+    ...mapGetters({
+      isReadyToStart: 'player/isReadyToStart'
+    })
+  },
   methods: {
     ...mapActions({
-      setMultiplayerMode: 'player/setMultiplayerMode'
+      setMultiplayerMode: 'player/setMultiplayerMode',
+      joinRoom: 'player/joinRoom',
+      updateRoomStatus: 'player/updateRoomStatus'
     }),
     startGame() {
       this.dialog = false;
       this.$emit("startGame");
     },
-    waitForPlayers() {
+    async sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    },
+    async waitForPlayers() {
       // this.dialog = false;
       this.waitForPlayersDialog = true
       this.setMultiplayerMode(true)
-      // this.$emit("startGame");
+      this.joinRoom(this.roomName)
+      while (!this.isReadyToStart) {
+        await this.updateRoomStatus(this.roomName)
+        await this.sleep(50);
+      }
+      this.waitForPlayersDialog = false
+      this.dialog = false
+      this.$emit("startGame");
     }
   }
 };

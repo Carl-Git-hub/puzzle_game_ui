@@ -1,12 +1,13 @@
 const API_ENDPOINT = process.env.VUE_APP_API_ROOT_ENDPOINT
 
 export default {
-  END_POINTS: {
-    JOIN_ROOM : API_ENDPOINT + '/join',
-    MOVE_PLAYER: API_ENDPOINT + '/move',
-    ADD_GROUND: API_ENDPOINT + '/addGround',
-    POSITION: API_ENDPOINT + '/position',
-    GROUND: API_ENDPOINT + '/ground'
+  ENDPOINTS: {
+    JOIN_ROOM : API_ENDPOINT + '/player/join',
+    MOVE_PLAYER: API_ENDPOINT + '/player/move',
+    ADD_GROUND: API_ENDPOINT + '/player/addGround',
+    POSITION: API_ENDPOINT + '/player/position',
+    GROUND: API_ENDPOINT + '/player/ground',
+    ROOM: API_ENDPOINT + 'room'
   },
   blockType: {
     I: [

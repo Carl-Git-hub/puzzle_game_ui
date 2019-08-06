@@ -21,6 +21,7 @@ export default {
   name: 'tetris',
   data: () => {
     return {
+      gameOver: false,
       busPanel: new Vue()
     }
   },
@@ -45,6 +46,8 @@ export default {
       setBlockPos: 'player/setBlockPos',
       setCurBlockRot: 'player/setCurBlockRot',
       addShapeToGround: 'ground/addShapeToGround',
+      updateBlockPositions: 'player/updateBlockPositions',
+      updateGroundState: 'ground/updateGroundState',
       clearRows: 'ground/clearRows'
     }),
     moveLeft () {
@@ -140,6 +143,9 @@ export default {
       }
     },
     tetrisTick() {
+      if (this.gameOver) {
+        return
+      }
       if (this.checkIfTouchWallsOrGround(1, 0)) {
         this.addShapeToGround({ 
           blocks: this.getCurrentBlockPosition(),
@@ -165,10 +171,25 @@ export default {
         this.setBlockPos(this.dropBlock())
       }
       this.busPanel.$emit('render')
+      if (this.isMultiplayer && (this.getGroundState(1)[0][5] || this.getGroundState(1)[0][4])) {
+        window.alert("You Win!")
+        this.gameOver = true
+      }
+      if (this.getGroundState(0)[0][5] || this.getGroundState(0)[0][4]) {
+        window.alert("You Lose!")
+        this.gameOver = true
+      }
     },
     startGame() {
       var self = this
       self.setBlockDrop = setInterval(this.tetrisTick, 500);
+      if (this.isMultiplayer) {
+        self.setMultiplayerUpdate = setInterval(
+          function() {
+            self.updateBlockPositions({'player': 1}),
+            self.updateGroundState({'player': 1})
+          }, 30);
+      }
     }
   },
   created () {
