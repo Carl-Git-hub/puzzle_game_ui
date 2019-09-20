@@ -39,12 +39,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import randomstring from 'randomstring'
 
 export default {
   name: "playerSelect",
   data() {
     return {
-      roomName: 'test',
+      roomName: randomstring.generate(10),
       dialog: true,
       waitForPlayersDialog: false
     };

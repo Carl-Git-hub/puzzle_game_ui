@@ -1,5 +1,6 @@
 <template>
   <div class="panel">
+    <p class="title-text h3">Player {{ player + 1 }}</p>
     <div v-for="row in rowSize" :key="'cell-row-' + row">
       <div v-for="col in colSize" :key="'cell-'+ row + '-' + col">
         <cell :bus="cellPanelsBus[row - 1][col - 1]" class="cell" :posX="col" :posY="row"></cell>
@@ -76,9 +77,25 @@ export default {
 </script>
 
 <style scoped>
-.panel {
-  position: relative;
-  padding: 10px;
-  width: 600px;
+.title-text {
+  position: absolute;
+  top: 0px;
 }
+@media screen and (min-width: 960px) {
+  .panel {
+    position: relative;
+    height: 200px;
+    padding: 10px;
+    width: 40%;
+  }
+}
+@media screen and (max-width: 959px) {
+  .panel {
+    position: relative;
+    height: 600px;
+    padding: 10px;
+    width: 90%;
+  }
+}
+
 </style>
