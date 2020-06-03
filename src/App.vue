@@ -43,5 +43,6 @@ export default {
   margin-top: 0px;
   height: 100%;
   width: 100%;
+  overscroll-behavior-y: contain;
 }
 </style>

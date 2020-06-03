@@ -92,7 +92,7 @@ export default {
 @media screen and (max-width: 959px) {
   .panel {
     position: relative;
-    height: 600px;
+    height: 500px;
     padding: 10px;
     width: 90%;
   }

@@ -1,5 +1,5 @@
 const state = {
-    cellSize: 30
+    cellSize: 25
   }
   
   const mutations = {

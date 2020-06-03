@@ -277,8 +277,8 @@ div:focus {
 @media screen and (max-width: 959px) {
   .game-box {
     position: relative;
-    height: 80%;
-    width: 80%;
+    height: 100%;
+    width: 100%;
     overflow: hidden;
     /* width: 200px; */
     /* display: flex; */
