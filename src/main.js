@@ -20,7 +20,7 @@ Vue.use(Vue2TouchEvents, {
   touchClass: '',
   tapTolerance: 10,
   touchHoldTolerance: 400,
-  swipeTolerance: 20,
+  swipeTolerance: 3,
   longTapTimeInterval: 400
 })
 
