@@ -12,9 +12,10 @@
           <v-divider />
           <v-container grid-list-md>
             <v-layout wrap>
+              <div>Pick a room name and give the other player the same room name to play.</div>
               <v-spacer></v-spacer>
               <v-flex xs12 sm6 md4>
-                <v-text-field v-model="roomName" label="Game Name" required></v-text-field>
+                <v-text-field v-model="roomName" label="Room Name" required></v-text-field>
               </v-flex>
               <v-spacer></v-spacer>
             </v-layout>

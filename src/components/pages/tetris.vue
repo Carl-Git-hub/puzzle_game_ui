@@ -8,6 +8,10 @@
       @keydown.down="moveDown"
       @keydown.up="rotateBlock"
       tabindex="0"
+      v-touch:swipe.left="moveLeft"
+      v-touch:swipe.right="moveRight"
+      v-touch:swipe.down="moveDown"
+      v-touch:tap="rotateBlock"
     >
       <panel :bus="busPanel" :rowSize="getNumRows" :colSize="getNumCols" :player="0" class="panel"></panel>
       <panel
@@ -264,6 +268,8 @@ div:focus {
 @media screen and (max-width: 959px) {
   .tetris-box {
     position: relative;
+    height: 100%;
+    width: 100%;
     /* width: 200px; */
     /* display: flex; */
     /* justify-content: flex-start; */

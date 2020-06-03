@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
+import Vue2TouchEvents from 'vue2-touch-events'
 import BootstrapVue from 'bootstrap-vue'
 
 import App from './App.vue'
@@ -14,6 +15,7 @@ Vue.config.productionTip = false
 
 Vue.use(Vuetify)
 Vue.use(BootstrapVue)
+Vue.use(Vue2TouchEvents)
 
 new Vue({
   router,
