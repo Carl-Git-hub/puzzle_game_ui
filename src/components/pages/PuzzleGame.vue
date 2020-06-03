@@ -2,6 +2,7 @@
   <div>
     <player-select v-on:startGame="startGame"></player-select>
     <div
+      ref="gamePanel"
       class="game-box"
       @keydown.left="moveLeft"
       @keydown.right="moveRight"
@@ -171,6 +172,7 @@ export default {
       };
     },
     tick() {
+      this.$refs.gamePanel.focus()
       if (this.gameOver) {
         return;
       }
@@ -199,16 +201,23 @@ export default {
         this.setBlockPos(this.dropBlock());
       }
       this.busPanel.$emit("render");
-      if (
-        this.isMultiplayer &&
-        (this.getGroundState(1)[0][5] || this.getGroundState(1)[0][4])
-      ) {
-        window.alert("You Win!");
-        this.gameOver = true;
+      const topBlockPlayerTwo = this.getGroundState(1)[0]
+      if (topBlockPlayerTwo) {
+        const playerTwoMiddleTopLeftBlock = this.getGroundState(1)[0][4]
+        const playerTwoMiddleTopRightBlock = this.getGroundState(1)[0][5]
+        if (this.isMultiplayer && (playerTwoMiddleTopLeftBlock || playerTwoMiddleTopRightBlock)) {
+          window.alert("You Win!");
+          this.gameOver = true;
+        }
       }
-      if (this.getGroundState(0)[0][5] || this.getGroundState(0)[0][4]) {
-        window.alert("You Lose!");
-        this.gameOver = true;
+      const topBlockPlayerOne = this.getGroundState(0)[0]
+      if (topBlockPlayerOne) {
+        const playerOneMiddleTopLeftBlock = this.getGroundState(0)[0][4]
+        const playerOneMiddleTopRightBlock = this.getGroundState(0)[0][5]
+        if (playerOneMiddleTopLeftBlock || playerOneMiddleTopRightBlock) {
+          window.alert("You Lose!");
+          this.gameOver = true;
+        }
       }
     },
     startGame() {

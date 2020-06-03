@@ -15,7 +15,14 @@ Vue.config.productionTip = false
 
 Vue.use(Vuetify)
 Vue.use(BootstrapVue)
-Vue.use(Vue2TouchEvents)
+Vue.use(Vue2TouchEvents, {
+  disableClick: false,
+  touchClass: '',
+  tapTolerance: 10,
+  touchHoldTolerance: 400,
+  swipeTolerance: 20,
+  longTapTimeInterval: 400
+})
 
 new Vue({
   router,
