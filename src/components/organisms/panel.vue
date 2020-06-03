@@ -3,7 +3,7 @@
     <p class="title-text h3">Player {{ player + 1 }}</p>
     <div v-for="row in rowSize" :key="'cell-row-' + row">
       <div v-for="col in colSize" :key="'cell-'+ row + '-' + col">
-        <cell :bus="cellPanelsBus[row - 1][col - 1]" class="cell" :posX="col" :posY="row"></cell>
+        <Cell :bus="cellPanelsBus[row - 1][col - 1]" class="cell" :posX="col" :posY="row"></Cell>
       </div>
     </div>
   </div>
@@ -13,11 +13,11 @@
 import Vue from "vue";
 import { mapGetters } from 'vuex'
 
-import cell from "../atoms/cell.vue"
+import Cell from "../atoms/Cell.vue"
 import constants from '../../const'
 
 export default {
-  name: "panel",
+  name: "Panel",
   props: {
     bus: Object,
     rowSize: Number,
@@ -33,7 +33,7 @@ export default {
     })
   },
   components: {
-    cell
+    Cell
   },
   data() {
     var cellPanels = []

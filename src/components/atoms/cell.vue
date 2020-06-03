@@ -6,7 +6,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'cell',
+  name: 'Cell',
   data() {
     return {
       shape: "EMPTY"

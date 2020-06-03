@@ -43,7 +43,7 @@ import { mapGetters, mapActions } from 'vuex'
 import randomstring from 'randomstring'
 
 export default {
-  name: "playerSelect",
+  name: "PlayerSelect",
   data() {
     return {
       roomName: randomstring.generate(10),

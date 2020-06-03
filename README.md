@@ -1,4 +1,4 @@
-# tetris
+# puzzle_game
 
 ## Project setup
 ```

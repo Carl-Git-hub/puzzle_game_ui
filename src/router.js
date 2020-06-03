@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Tetris from './components/pages/tetris.vue'
+import PuzzleGame from './components/pages/PuzzleGame.vue'
 
 Vue.use(Router)
 
@@ -10,8 +10,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'tetris',
-      component: Tetris
+      name: 'main',
+      component: PuzzleGame
     }
   ]
 })

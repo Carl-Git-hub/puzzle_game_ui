@@ -2,7 +2,7 @@
   <div>
     <player-select v-on:startGame="startGame"></player-select>
     <div
-      class="tetris-box"
+      class="game-box"
       @keydown.left="moveLeft"
       @keydown.right="moveRight"
       @keydown.down="moveDown"
@@ -32,11 +32,11 @@ import { mapActions, mapGetters } from "vuex";
 import Vue from "vue";
 
 import constants from "../../const";
-import panel from "../organisms/panel.vue";
-import playerSelect from "../organisms/playerSelect.vue";
+import Panel from "../organisms/Panel.vue";
+import PlayerSelect from "../organisms/PlayerSelect.vue";
 
 export default {
-  name: "tetris",
+  name: "game",
   data: () => {
     return {
       gameOver: false,
@@ -44,8 +44,8 @@ export default {
     };
   },
   components: {
-    panel,
-    playerSelect
+    Panel,
+    PlayerSelect
   },
   computed: {
     ...mapGetters({
@@ -170,7 +170,7 @@ export default {
         player: 0
       };
     },
-    tetrisTick() {
+    tick() {
       if (this.gameOver) {
         return;
       }
@@ -213,7 +213,7 @@ export default {
     },
     startGame() {
       var self = this;
-      self.setBlockDrop = setInterval(this.tetrisTick, 500);
+      self.setBlockDrop = setInterval(this.tick, 500);
       if (this.isMultiplayer) {
         self.setMultiplayerUpdate = setInterval(function() {
           self.updateBlockPositions({ player: 1 }),
@@ -258,7 +258,7 @@ div:focus {
   outline: none;
 }
 @media screen and (min-width: 960px) {
-  .tetris-box {
+  .game-box {
     position: relative;
     /* width: 200px; */
     display: flex;
@@ -266,7 +266,7 @@ div:focus {
   }
 }
 @media screen and (max-width: 959px) {
-  .tetris-box {
+  .game-box {
     position: relative;
     height: 100%;
     width: 100%;
