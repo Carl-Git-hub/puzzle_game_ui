@@ -14,14 +14,13 @@
       v-touch:swipe.down="moveDown"
       v-touch:tap="rotateBlock"
     >
-      <panel :bus="busPanel" :rowSize="getNumRows" :colSize="getNumCols" :player="0" class="panel"></panel>
+      <panel :bus="busPanel" :rowSize="getNumRows" :colSize="getNumCols" :player="0"></panel>
       <panel
         v-if="isMultiplayer"
         :bus="busPanel"
         :rowSize="getNumRows"
         :colSize="getNumCols"
         :player="1"
-        class="panel"
       ></panel>
     </div>
   </div>
@@ -172,7 +171,6 @@ export default {
       };
     },
     tick() {
-      this.$refs.gamePanel.focus()
       if (this.gameOver) {
         return;
       }
@@ -222,6 +220,7 @@ export default {
     },
     startGame() {
       var self = this;
+      this.$refs.gamePanel.focus()
       self.setBlockDrop = setInterval(this.tick, 500);
       if (this.isMultiplayer) {
         self.setMultiplayerUpdate = setInterval(function() {

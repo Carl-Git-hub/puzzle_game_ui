@@ -1,9 +1,11 @@
 <template>
   <div class="panel">
     <p class="title-text h3">Player {{ player + 1 }}</p>
-    <div v-for="row in rowSize" :key="'cell-row-' + row">
-      <div v-for="col in colSize" :key="'cell-'+ row + '-' + col">
-        <Cell :bus="cellPanelsBus[row - 1][col - 1]" class="cell" :posX="col" :posY="row"></Cell>
+    <div class="grid">
+      <div v-for="row in rowSize" :key="'cell-row-' + row">
+        <div v-for="col in colSize" :key="'cell-'+ row + '-' + col">
+          <Cell :bus="cellPanelsBus[row - 1][col - 1]" class="cell" :posX="col" :posY="row"></Cell>
+        </div>
       </div>
     </div>
   </div>
@@ -78,23 +80,28 @@ export default {
 
 <style scoped>
 .title-text {
-  position: absolute;
-  top: 0px;
+  position: relative;
+  height: 16px;
+  width: 140px;
+}
+.grid {
+  position: relative;
+  height: 500px;
+  width: 100%;
+}
+.panel {
+    position: relative;
+    height: 520px;
+    padding: 10px;
 }
 @media screen and (min-width: 960px) {
   .panel {
-    position: relative;
-    height: 600px;
-    padding: 10px;
-    width: 40%;
+    width: 300px;
   }
 }
 @media screen and (max-width: 959px) {
   .panel {
-    position: relative;
-    height: 500px;
-    padding: 10px;
-    width: 90%;
+    width: 300px;
   }
 }
 
