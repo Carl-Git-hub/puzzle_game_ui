@@ -13,7 +13,6 @@
       v-touch:swipe.left="moveLeft"
       v-touch:swipe.right="moveRight"
       v-touch:swipe.down="moveDown"
-      v-touch:swipe.up="moveDownInstant"
       v-touch:tap="rotateBlock"
     >
       <panel :bus="busPanel" :rowSize="getNumRows" :colSize="getNumCols" :player="0"></panel>
