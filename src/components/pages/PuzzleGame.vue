@@ -7,11 +7,13 @@
       @keydown.left="moveLeft"
       @keydown.right="moveRight"
       @keydown.down="moveDown"
-      @keydown.up="rotateBlock"
+      @keydown.space="rotateBlock"
+      @keydown.up="moveDownInstant"
       tabindex="0"
       v-touch:swipe.left="moveLeft"
       v-touch:swipe.right="moveRight"
       v-touch:swipe.down="moveDown"
+      v-touch:swipe.up="moveDownInstant"
       v-touch:tap="rotateBlock"
     >
       <panel :bus="busPanel" :rowSize="getNumRows" :colSize="getNumCols" :player="0"></panel>
@@ -88,6 +90,16 @@ export default {
         y: this.getBlockPos(0).y,
         player: 0
       });
+      this.busPanel.$emit("render");
+    },
+    moveDownInstant() {
+      while (!this.checkIfTouchWallsOrGround(1, 0)) {
+        this.setBlockPos({
+          x: this.getBlockPos(0).x,
+          y: this.getBlockPos(0).y + 1,
+          player: 0
+        });
+      }
       this.busPanel.$emit("render");
     },
     moveDown() {
@@ -268,7 +280,6 @@ div:focus {
 @media screen and (min-width: 960px) {
   .game-box {
     position: relative;
-    /* width: 200px; */
     display: flex;
     justify-content: flex-start;
   }
@@ -279,7 +290,6 @@ div:focus {
     height: 100%;
     width: 100%;
     overflow: hidden;
-    /* width: 200px; */
     /* display: flex; */
     /* justify-content: flex-start; */
   }

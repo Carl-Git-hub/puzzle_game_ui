@@ -8,6 +8,9 @@ module.exports = {
             .loader(require.resolve('@storybook/addon-storysource/loader'))
         },
   configureWebpack: {
-    devtool: 'source-map'
+    devtool: 'source-map',
+    output: {
+        filename: '[name].[hash].js',
+    }
   }
 }

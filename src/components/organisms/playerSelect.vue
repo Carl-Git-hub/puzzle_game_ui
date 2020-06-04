@@ -2,6 +2,8 @@
   <v-layout row justify-center>
     <v-dialog v-model="dialog" persistent max-width="500">
       <v-card>
+        <v-card-title class="headline">Controls</v-card-title>
+        <div>Touch the screen or press space to rotate the shape.</div>
         <v-card-title class="headline">Select number of players</v-card-title>
         <v-card-text>
           <v-card-actions>
