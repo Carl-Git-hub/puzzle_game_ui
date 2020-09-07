@@ -70,29 +70,14 @@ export default {
     border-right-color: yellow;
     border-bottom-color: yellow;
   }
-  .cell.T {
+  .cell.P {
     background-color: magenta;
     border-right-color: magenta;
     border-bottom-color: magenta;
   }
-  .cell.S {
+  .cell.H {
     background-color: lime;
     border-right-color: lime;
     border-bottom-color: lime;
-  }
-  .cell.Z {
-    background-color: red;
-    border-right-color: red;
-    border-bottom-color: red;
-  }
-  .cell.J {
-    background-color: blue;
-    border-right-color: blue;
-    border-bottom-color: blue;
-  }
-  .cell.L {
-    background-color: orange;
-    border-right-color: orange;
-    border-bottom-color: orange;
   }
 </style>

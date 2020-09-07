@@ -1,5 +1,5 @@
 const state = {
-    numRows: 18,
+    numRows: 16,
     numCols: 10
   }
   
